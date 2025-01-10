@@ -14,11 +14,11 @@ The trading data come from the [Spain’s official trade database](https://datac
 
 After downloading a file for imports and another for exports, I made the necessary transformations within the PowerQuery, changed the name of the countries to English, and appended the imports and exports into a single query. While I won’t go into the details of the transformation process, here’s what the final query looked like:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/01.png]
+![Merged queries of imports and exports](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/01.png)
 
 As you can see, the data include the Taric code (a classification system used in international trade) but not the product description. To obtain the official descriptions, I downloaded the list of [Taric codes](https://circabc.europa.eu/ui/group/0e5f18c2-4b2f-42e9-aed4-dfe50ae1263b/library/fcf7031e-f940-4d35-be0d-757688d13756/details) and loaded it into the model to merge it with the main dataset. Here’s what the list looks like when downloaded:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/02.png]
+![Taric codes and their description](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/02.png)
 
 If you look closely, the list of Taric codes is much more detailed than the codes in the main dataset. For example, the taric code *01* appears as *010000000 80* , the code* 0101* is presented as *010100000 80* , etc. Wait a minute… **there’s a clear pattern here** ! The codes in the main dataset match the official list but with the final 0s and the two numbers followed by the space removed. As Power BI supports *R * and* Python* , I used regular expressions (regex) to get rid of the unnecessary numbers:
 
@@ -38,11 +38,11 @@ I replaced the last 0s and the two digits followed by space with nothing. Let's 
 
 I'll explain it starting at the end of the expression. The \$ indicates the end of the string, ensuring the expression only matches at the end rather than anywhere within the string. The \d represents digits, the {2} specifies exactly two (so \d{2} is exactly two digits), the \s stands for a space and the 0* matches any number of 0s. But, any number of 0s at the end of the string (remember, this is why the $ is used). The final result is:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/03.png]
+![The taric codes and their descriptions after the manipulation](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/03.png)
 
 After that, the only step left to complete the query is to merge the the two datasets on the Taric code (by doing a left join). The final dataset looks like this:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/04.png]
+![The final dataset](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/04.png)
 
 The presentation dynamically updates each month, comparing trade flows for the current year, month, and period with the corresponding values from the previous year, month, and period. It is wise to create a Calendar table and establish a relationship with the main dataset. I used the following DAX code to create the Calendar, ensuring it only includes the date range of the main dataset:
 
@@ -61,7 +61,7 @@ Date = DATE('Trade_Vehicles_2020_2023'[Year]; Trade_Vehicles_2020_2023[Month];1)
 
 After that, the final step is to create an active relationship between the two tables:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/05.png]
+![Date relationship between the two tables](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/05.png)
 
 Now that the dataset is complete, we can move on to creating measures to analyze the trade flows for the previous year, previous month, and other time periods.
 
@@ -102,7 +102,7 @@ As you will see later on, we will also include “Variables” and “Text”, s
 
 Before further proceeding, it’s always a good idea to verify that the measures return the expected results. To do this, I create separate cards for each measure and a couple of filters (one for the year and another for the month) to check if the values update correctly. Moreover, I modified the interactions between the filters and the cards so that year comparisons remain unaffected by the month filter and vice versa:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/01.gif]
+![Checking the measures created](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/01.gif)
 
 The measures are working! Let’s create the percentage difference between them:
 
@@ -119,7 +119,7 @@ The measures are working! Let’s create the percentage difference between them:
 
 Testing the measures:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/02.gif]
+![Checking the measures created](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/02.gif)
 
 The numerical measures work. It is time to move to the text measures. Remember, the presentation is made of text, numbers, and arrows.
 
@@ -183,7 +183,7 @@ The final text is stored in the “Text” table to ensure everything is organiz
 
 This is how the slide of exports looks like after creating the texts:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/06.jpg]
+![](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/06.jpg)
 
 Each element has a static filter that remains unchanged, as the presentation format is consistent each month. For instance, this slide focuses solely on exports, so the flow is filtered across the entire page. Additionally, dynamic filters, which I’ll discuss later, allow us to change the displayed values dynamically. More on this in in the following section.
 
@@ -205,27 +205,27 @@ Arrow_Up = UNICHAR("129157")
 
 The measure is displayed on a card, and the arrow's color changes dynamically: red when exports decrease, green when exports increase, and orange when exports remain unchanged. Here's how this is achieved:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/07.jpg]
+![Creating a custom function to determine the color of the arrows](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/07.jpg)
 
 Next, the arrows are positioned to the left of each text element, using the same filters. Finally, the slide is completed with the addition of a bar graph and some extra modifications. Here's how the final slide looks:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/03.gif]
+![Preview of the slide of exports](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/03.gif)
 
 To create similar slides for imports, the exports slide is duplicated, and the filter is adjusted to select imports. However, as mentioned earlier, this is not a dynamic presentation. It's a traditional PowerPoint presentation where exports, imports, and different TARIC categories each have their own static, dedicated slide. Therefore, the filters at the top of the slide need to be hidden.
 
 This is easy to achieve, you just go to View → Selection and you hide the two filters:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/08.png]
+![](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/08.png)
 
 Then, the page is duplicated, and the static filter for the flow across the entire page is updated to "Import." The filters are then synchronized between the pages. When new data for additional months or years is added, updating the dynamic filters on the first page automatically updates the entire Power BI presentation. We select from View → Sync slicers the slicers and we sync them with the rest of the pages:
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/09.jpg]
+![Syncing the slicers between pages](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/09.jpg)
 
 ### 3. Transforming to PowerPoint
 
 The presentation is ready but It is not a .ppt file (yet). This is, by far, the easiest part of the process (and the most satisfying, as all the hard work is finally done). Before exporting the pages as slides, the Power BI report needs to be published.
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/10.png]
+![Publishing the report](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/10.png)
 
 Once the report is opened online, there is an option to Export it as a PowerPoint presentation. This option gives two choices:
 
@@ -234,7 +234,7 @@ Once the report is opened online, there is an option to Export it as a PowerPoin
 
 In my case, I want the presentation to be static (this is the reason the filters are not shown) so I choose the second option, “*Export as image* ”. I want to export the current filtered values and all the pages that are not hidden (don’t want to include the “Test” page, of course).
 
-!()[https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/11.png]
+![](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/11.png)
 
 After a short wait, a .ppt file is downloaded. The only remaining step is to remove the first page, and the presentation is ready.
 
