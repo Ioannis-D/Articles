@@ -20,7 +20,7 @@ As you can see, the data include the Taric code (a classification system used in
 
 ![Taric codes and their description](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/02.png)
 
-If you look closely, the list of Taric codes is much more detailed than the codes in the main dataset. For example, the taric code *01* appears as *010000000 80* , the code* 0101* is presented as *010100000 80* , etc. Wait a minute… **there’s a clear pattern here** ! The codes in the main dataset match the official list but with the final 0s and the two numbers followed by the space removed. As Power BI supports *R* and *Python* , I used regular expressions (regex) to get rid of the unnecessary numbers:
+If you look closely, the list of Taric codes is much more detailed than the codes in the main dataset. For example, the taric code *01* appears as *010000000 80* , the code* 0101* is presented as *010100000 80* , etc. Wait a minute… **there’s a clear pattern here** ! The codes in the main dataset match the official list but with the final 0s and the two numbers followed by the space removed. As Power BI supports *R* and *Python*, I used regular expressions (regex) to get rid of the unnecessary numbers:
 
 This is the code I used:
 
@@ -71,7 +71,7 @@ As mentioned earlier, it is necessary to compare trade flows between consecutive
 
 > ( **∑** euros **current month** / **∑** euros **previous month** ) — 1
 
-Filtering by month makes it straightforward to retrieve the first part of the equation. However, the second part needs to be calculated. The DAX language simplifies this process with build-in functions such as [*PREVIOUSYEAR()*](https://learn.microsoft.com/en-us/dax/previousyear-function-dax), [*PREVIOUSMONTH()*](https://learn.microsoft.com/en-us/dax/startofmonth-function-dax), and [*SAMEPERIODLASTYEAR()*](https://learn.microsoft.com/en-us/dax/sameperiodlastyear-function-dax)*, * among others.Filtering by month makes it straightforward to retrieve the first part of the equation. However, the second part needs to be calculated. The DAX language simplifies this process with build-in functions such as PREVIOUSYEAR(), PREVIOUSMONTH(), and SAMEPERIODLASTYEAR(), among others.
+Filtering by month makes it straightforward to retrieve the first part of the equation. However, the second part needs to be calculated. The DAX language simplifies this process with build-in functions such as [*PREVIOUSYEAR()*](https://learn.microsoft.com/en-us/dax/previousyear-function-dax), [*PREVIOUSMONTH()*](https://learn.microsoft.com/en-us/dax/startofmonth-function-dax), and [*SAMEPERIODLASTYEAR()*](https://learn.microsoft.com/en-us/dax/sameperiodlastyear-function-dax), among others.Filtering by month makes it straightforward to retrieve the first part of the equation. However, the second part needs to be calculated. The DAX language simplifies this process with build-in functions such as PREVIOUSYEAR(), PREVIOUSMONTH(), and SAMEPERIODLASTYEAR(), among others.
 
 > I am aware that the functions mentioned above can sometimes cause issues and not work as expected. I, myself, have encountered problems with the PREVIOUSMONTH() function in other scenarios. However, in this example, it works as intended.
 
@@ -127,7 +127,7 @@ The numerical measures work. It is time to move to the text measures. Remember, 
 
 Before moving on, it’s important to stop and consider: What exactly does the presentation include? As mentioned earlier, it includes trade values in euros for each month (obviously), along also text and arrows. Some text remains static, but whenever the month or the year is mentioned, it has to be updated dynamically. The same applies for the arrows.
 
-One thing at a time. Let’s start with the text and I will explain the reason that I created  a “*Variables* ” table to store specific measures/variables. Some of the text that appears includes statements:
+One thing at a time. Let’s start with the text and I will explain the reason that I created  a “*Variables*” table to store specific measures/variables. Some of the text that appears includes statements:
 
 **_Exports_** of total vehicles **_rose_** by **_x_%** -> (**_amount_€ April** vs **_amount_€ March**)
 or
@@ -187,7 +187,7 @@ This is how the slide of exports looks like after creating the texts:
 
 Each element has a static filter that remains unchanged, as the presentation format is consistent each month. For instance, this slide focuses solely on exports, so the flow is filtered across the entire page. Additionally, dynamic filters, which I’ll discuss later, allow us to change the displayed values dynamically. More on this in in the following section.
 
-Finally, let’s add some arrows. DAX supports the* UNICHAR()* function which makes it possible to access and represent a wide range of icons and special characters, including arrows. For the intermonthly changes, this is the measure of the arrow:
+Finally, let’s add some arrows. DAX supports the *[UNICHAR()](https://learn.microsoft.com/en-us/dax/unichar-function-dax)* function which makes it possible to access and represent a wide range of icons and special characters, including arrows. For the intermonthly changes, this is the measure of the arrow:
 
 ```
 // The final measure stored in the Text table
