@@ -20,7 +20,7 @@ As you can see, the data include the Taric code (a classification system used in
 
 ![Taric codes and their description](https://github.com/Ioannis-D/Articles/blob/main/How%20I%20automated%20a%20monthly%20PowerPoint%20presentation%20using%20Power%C2%A0BI/Images/02.png)
 
-If you look closely, the list of Taric codes is much more detailed than the codes in the main dataset. For example, the taric code *01* appears as *010000000 80* , the code* 0101* is presented as *010100000 80* , etc. Wait a minute… **there’s a clear pattern here** ! The codes in the main dataset match the official list but with the final 0s and the two numbers followed by the space removed. As Power BI supports *R * and* Python* , I used regular expressions (regex) to get rid of the unnecessary numbers:
+If you look closely, the list of Taric codes is much more detailed than the codes in the main dataset. For example, the taric code *01* appears as *010000000 80* , the code* 0101* is presented as *010100000 80* , etc. Wait a minute… **there’s a clear pattern here** ! The codes in the main dataset match the official list but with the final 0s and the two numbers followed by the space removed. As Power BI supports *R* and *Python* , I used regular expressions (regex) to get rid of the unnecessary numbers:
 
 This is the code I used:
 
